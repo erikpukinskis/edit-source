@@ -1,11 +1,11 @@
 var library = require("module-library")(require)
 
 module.exports = library.export(
-  "ezjs",
+  "edit-source",
   ["web-element"],
   function(element) {
 
-    function ezjs() {
+    function ezjsButton() {
       var left = element(
         ".bolt-bit.left",
         element.style({
@@ -57,6 +57,6 @@ module.exports = library.export(
       return container
     }
 
-    return ezjs
+    return ezjsButton
   }
 )

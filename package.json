@@ -1,6 +1,6 @@
 {
   "name": "ezjs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Programming for more people",
   "main": "ezjs.js",
   "dependencies": {
@@ -9,10 +9,8 @@
     "web-element": "*",
     "basic-styles": "*",
     "web-site": "*",
-    "basic-styles": "0.20.0",
     "browser-bridge": "*",
     "tell-the-universe": "*",
-    "basic-styles": "*",
     "make-request": "*",
     "add-html": "*"
   },

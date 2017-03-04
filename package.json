@@ -1,6 +1,6 @@
 {
   "name": "edit-source",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Button for editing the source code of a web application",
   "main": "edit-source.js",
   "dependencies": {

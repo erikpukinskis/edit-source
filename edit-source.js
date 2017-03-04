@@ -2,8 +2,8 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "edit-source",
-  ["web-element", "function-call", "make-request", "render-module"],
-  function(element, functionCall, makeRequest, renderModule) {
+  ["web-element", "function-call", "make-request", "render-module", "browser-bridge"],
+  function(element, functionCall, makeRequest, renderModule, BrowserBridge) {
 
     var left = element(
       ".bolt-bit.left",
@@ -41,8 +41,8 @@ module.exports = library.export(
         "min-height": "34px",
 
         ".open": {
-          "width": "400px",
-          "margin-left": "-400px",
+          "width": "270px",
+          "margin-left": "-270px",
           "min-height": "100px",
         }
       })
@@ -70,7 +70,7 @@ module.exports = library.export(
         "cursor": "pointer",
       }),
       [bolt],
-      function(renderSelector) {
+      function(bridge, renderSelector) {
 
         var showSource = bridge.remember("edit-source").withArgs(renderSelector, functionCall.raw("event"))
 
@@ -79,19 +79,18 @@ module.exports = library.export(
     )
 
     function prepareSite(site, lib) {
-
+      renderModule.prepareSite(site)
+      
       site.addRoute("get", "/edit-source/:moduleName", function(request, response) {
 
         var name = request.params.moduleName
 
-        throw new Error("ready?")
-        var singleton = lib.get(name)
-
-        if (!module) { throw new Error("no mod!") }
-
         var bridge = new BrowserBridge().partial().forResponse(response)
 
-        renderModule(bridge, singleton)
+        lib.using([name], function(singleton) {
+          renderModule(bridge, singleton)
+        })
+
       })
 
     }
@@ -107,12 +106,10 @@ module.exports = library.export(
         [makeRequest.defineOn(bridge)],
         function showSource(makeRequest, renderSelector, event) {
 
+          if (document.querySelector(".program.open")) { return }
           makeRequest("/edit-source/test-check-book", function(partial) {
-            console.log("got it!", partial)
+            document.querySelector(".program").innerHTML = partial
           })
-
-      var get = loadPartial.withArgs()
-
 
           event.preventDefault()
 

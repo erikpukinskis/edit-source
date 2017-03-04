@@ -12,7 +12,8 @@
     "browser-bridge": "*",
     "tell-the-universe": "*",
     "make-request": "*",
-    "add-html": "*"
+    "add-html": "*",
+    "render-module": "*"
   },
   "repository": {
     "type": "git",

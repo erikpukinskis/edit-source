@@ -2,8 +2,8 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "edit-source",
-  ["web-element", "function-call", "make-request"],
-  function(element, functionCall, makeRequest) {
+  ["web-element", "function-call", "make-request", "render-module"],
+  function(element, functionCall, makeRequest, renderModule) {
 
     var left = element(
       ".bolt-bit.left",
@@ -78,7 +78,25 @@ module.exports = library.export(
       }
     )
 
-    ezjsButton.prepareBridge = function(bridge) {
+    function prepareSite(site, lib) {
+
+      site.addRoute("get", "/edit-source/:moduleName", function(request, response) {
+
+        var name = request.params.moduleName
+
+        throw new Error("ready?")
+        var singleton = lib.get(name)
+
+        if (!module) { throw new Error("no mod!") }
+
+        var bridge = new BrowserBridge().partial().forResponse(response)
+
+        renderModule(bridge, singleton)
+      })
+
+    }
+
+    function prepareBridge(bridge) {
       if (bridge.remember("edit-source")) { return }
 
       bridge.addToHead(
@@ -109,6 +127,10 @@ module.exports = library.export(
 
       bridge.see("edit-source", binding)
     }
+
+    ezjsButton.prepareBridge = prepareBridge
+
+    ezjsButton.prepareSite = prepareSite
 
     return ezjsButton
   }

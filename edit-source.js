@@ -33,16 +33,19 @@ module.exports = library.export(
       ".program",
       element.style({
         "position": "relative",
+        "min-height": "100px",
+        "max-width": "100%",
+        "margin-top": "-50px",
         "background-color": "#f1feff",
         "width": "1px",
-        "margin-top": "-6px",
+        "margin-top": "-50px",
         "margin-left": "-1px",
         "float": "left",
         "min-height": "34px",
 
         ".open": {
-          "width": "270px",
-          "margin-left": "-270px",
+          "width": "520px",
+          "margin-left": "-545px",
           "min-height": "100px",
         }
       })
@@ -54,7 +57,7 @@ module.exports = library.export(
         "background-color": "#dcfdff",
         "height": "100%",
       }),
-      [program(), left, right]
+      [left, right]
     )
 
     var ezjsButton = element.template(
@@ -115,7 +118,7 @@ module.exports = library.export(
 
           var render = document.querySelector(renderSelector)
 
-          render.style.transform = "translateX(300px)"
+          render.style.transform = "translateX(540px)"
           render.style.transition = "transform 1s"
 
           document.querySelector(".program").classList.add("open")
@@ -125,10 +128,17 @@ module.exports = library.export(
       bridge.see("edit-source", binding)
     }
 
-    ezjsButton.prepareBridge = prepareBridge
+    editSource.prepareBridge = prepareBridge
 
-    ezjsButton.prepareSite = prepareSite
+    editSource.prepareSite = prepareSite
 
-    return ezjsButton
+    function editSource(x,y) {
+      return [
+        program(),
+        ezjsButton(x,y),
+      ]
+    }
+
+    return editSource
   }
 )

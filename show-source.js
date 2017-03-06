@@ -1,9 +1,9 @@
 var library = require("module-library")(require)
 
 module.exports = library.export(
-  "edit-source",
-  ["web-element", "function-call", "make-request", "render-module", "browser-bridge"],
-  function(element, functionCall, makeRequest, renderModule, BrowserBridge) {
+  "show-source",
+  ["web-element", "function-call", "make-request", "browser-bridge", "./draw-expression", "./an-expression", "bridge-module", "./boot-program"],
+  function(element, functionCall, makeRequest, BrowserBridge, drawExpression, anExpression, bridgeModule, bootProgram) {
 
     var left = element(
       ".bolt-bit.left",
@@ -85,7 +85,6 @@ module.exports = library.export(
     )
 
     function prepareSite(site, lib) {
-      renderModule.prepareSite(site)
       
       site.addRoute("get", "/edit-source/:moduleName", function(request, response) {
 
@@ -99,6 +98,68 @@ module.exports = library.export(
 
       })
 
+      site.addRoute(
+        "get",
+        "/render-module/styles.css",
+        site.sendFile(__dirname, "styles.css")
+      )
+
+      site.addRoute(
+        "get",
+        "/library/:name.js",
+        function(request, response) {
+          var name = request.params.name
+
+          if (name.match(/[^a-z-]/)) {
+            throw new Error("Dependencies can only have lowercase letters and dash. You asked for "+name)
+          }
+
+          var bridge = new BrowserBridge()
+
+          var source = bridgeModule.definitionWithDeps(library, name, bridge)
+
+          response.setHeader('content-type', 'text/javascript')
+
+          response.send(source)
+        }
+      )
+    }
+
+    function renderModule(bridge, singleton) {
+
+      var module = singleton.__nrtvModule
+
+      var functionLiteral = anExpression.functionLiteral(module.func)
+
+      var program = drawExpression(functionLiteral, bridge)
+
+      var programName = module.name || "unnamed"
+
+      bootProgram.prepareBridge(bridge)
+
+      bridge.asap(
+        bridgeModule(library, "boot-program", bridge).withArgs(programName, program.data())
+      )
+
+      bridge.addToHead(
+        element("link", {
+          rel: "stylesheet",
+          href: "/render-module/styles.css"
+        })
+      )
+
+      var title = element(
+        module.name,
+        element.style({
+          "color": "cyan",
+          "font-weight": "bold",
+          "font-size": "1.2em",
+          "line-height": "2em",
+          "margin-top": "-2em",
+        })
+      )
+
+      bridge.send(element(title, program.element))
     }
 
     function prepareBridge(bridge) {
@@ -131,17 +192,17 @@ module.exports = library.export(
       bridge.see("edit-source", binding)
     }
 
-    editSource.prepareBridge = prepareBridge
+    showSource.prepareBridge = prepareBridge
 
-    editSource.prepareSite = prepareSite
+    showSource.prepareSite = prepareSite
 
-    function editSource(x,y) {
+    function showSource(x,y) {
       return [
         program(),
         ezjsButton(x,y),
       ]
     }
 
-    return editSource
+    return showSource
   }
 )

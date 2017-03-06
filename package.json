@@ -1,8 +1,8 @@
 {
-  "name": "edit-source",
+  "name": "show-source",
   "version": "0.7.0",
   "description": "Button for editing the source code of a web application",
-  "main": "edit-source.js",
+  "main": "show-source.js",
   "dependencies": {
     "module-library": "*",
     "web-host": "*",
@@ -13,10 +13,20 @@
     "tell-the-universe": "*",
     "make-request": "*",
     "add-html": "*",
-    "render-module": "*"
+    "bridge-module": "*",
+    "function-call": "*",
+    "make-it-editable": "*"
+  },
+  "scripts": {
+    "start": "node start",
+    "test": "node test"
+  },
+  "devDependencies": {
+    "run-test": "*",
+    "check-book": "*"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/erikpukinskis/edit-source.git"
+    "url": "https://github.com/erikpukinskis/show-source.git"
   }
 }

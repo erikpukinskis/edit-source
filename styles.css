@@ -1,0 +1,388 @@
+/*
+
+General Policies for this Module
+
+No transparency. Everything is a solid color. 
+
+*/
+
+
+body {
+  padding: 30px 20px;
+}
+
+body, button {
+  font-family: sans-serif;
+  font-size: 13pt;
+  padding-bottom: 1000px;
+  padding-top: 150px;
+}
+
+.two-columns {
+  margin: 20px auto;
+  width: 700px;
+}
+
+.column {
+  width: 340px;
+  margin-left: 10px;
+  float: right;
+}
+
+@media (max-width: 700px) {
+  .two-columns {
+    margin-top: 10px;
+  }
+
+  .column {
+    float: none;
+  }
+}
+
+.output {
+  height: 200px;
+  background: #fafafa;
+  padding: 10px;
+}
+
+.code-button {
+  padding: 8px 4px 10px 12px;
+  border-left-width: 0;
+  border-right-width: 0;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.code-button.literal, .code-button.being-edited-by-human {
+  /*padding-right: 12px;*/
+}
+
+
+.indenter {
+  position: relative;
+  z-index: 1;
+}
+
+.indenter::before {
+  z-index: 0;
+  content: " ";
+  display: block;
+  position: absolute;
+  border-left: 0.13em solid black;
+  height: 2.3em;
+  top: 2.1em;
+  left: 0.3em;
+  transform: rotate(-20deg);
+}
+
+.function-literal-label::before{
+  border-color: #666;
+}
+
+.variable-name::before {
+  border-color: #f8e;
+}
+
+.function-call-name::before {
+  border-color: #88f;
+}
+
+
+
+
+
+.return-label::before {
+  border-color: #aaa;
+}
+
+.return-label {
+  color: #aaa;
+  border-left: 2px solid #aaa;
+}
+
+
+
+
+
+
+.argument-name {
+  display: inline-block;
+  color: #5de;
+}
+
+.argument-name {
+  display: inline-block;
+}
+
+.function-argument-names {
+  display: inline;
+}
+
+/* Yucky inheritance stuff that has to be updated when things change: */
+.variable-assignment .function-call.function-argument {
+  display: block;
+}
+
+.function-call-name {
+  color: #88f;
+  cursor: text;
+}
+
+.function-call-name.indenter {
+  border-left: 2px solid #88f;
+}
+
+.function-call-args {
+  display: inline;
+}
+
+.call-in-call .function-call-name {
+  border-bottom-width: 0;
+  margin-bottom: -2px;
+}
+
+.code-button.function-call-name,
+.ghost-expression,
+.variable-name,
+.function-literal-label,
+.return-label {
+  max-width: 70%;
+  box-sizing: border-box;
+}
+
+
+.program-name {
+  display: inline-block;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+@media (max-width: 700px) {
+  .program-name {
+    margin-top: 50px;
+  }
+}
+
+
+.ghost-expression {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.ghost.code-button {
+  background: #ccf;
+  padding: 1px;
+  min-width: 18px;
+}
+
+.ghost-baby-line {
+  height: 32px;
+  line-height: 32px;
+  width: 32px;
+  color: white;
+  background: #88f;
+  text-align:  center;
+  display: block;
+}
+
+
+.empty-expression {
+  display: inline-block;
+  color: #ccc;
+  border: 2px solid #ddd;
+  padding: 6px 10px 7px 10px;
+}
+
+.empty-expression.selected {
+  color: #9cc;
+  border-color: #add;
+}
+
+
+.function-literal-label {
+  border-left: 2px solid #666;
+}
+
+.function-literal-body,
+.function-literal.function-argument {
+  padding-left: 0.8em;
+}
+
+.leads-to-function-call {
+  border-left: 2px dashed #eee;
+}
+
+/* Is this really supposed to be .indenter? Just guessing. This should be refactored without the descendant selector anyway. */
+
+.leads-to-function-call > .indenter {
+  margin-left: -2px;
+}
+
+.variable-name {
+  color: #f8e;
+}
+
+.variable-name.indenter {
+  border-left: 2px solid #f8e;
+}
+
+.variable-reference {
+  color: #f8e;
+}
+
+
+.rhs {
+  display: inline;
+}
+
+.code-button.inline {
+  padding-left: 0;
+  border-left: 0;
+}
+
+/*.leads-to-function-call > .rhs {
+  margin-left: 10px;
+}
+*/
+
+/* LITERALS */
+
+.code-button.literal {
+  background: #fafafa;
+}
+
+.object-literal {
+  background: #fafafa;
+}
+
+.object-literal .literal {
+  background: white;
+}
+
+.code-button.literal,
+.key,
+.function-literal-label {
+  color: #666;
+}
+
+.key-pair .literal {
+  display: inline-block;
+}
+
+.key {
+  margin-right: 12px;
+}
+
+.array-item {
+  border-left: 3px solid #bff;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.array-literal {
+  display: inline;
+}
+
+.object-literal .array-item {
+  display: inline-block;
+  margin-bottom: 0px;
+}
+
+.object-literal .literal {
+  margin-right: 10px;
+}
+
+
+/* MENU */
+
+.menu-item {
+  white-space: nowrap;
+  min-width: 10em;
+  min-height: 1em;
+  color: white;
+  border-bottom: 1px solid #8af;
+  background: #88f;
+  padding-bottom: 9px;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+  padding-bottom: 10px;
+}
+
+.menu {
+  margin: 0 auto;
+  margin-top: 20%;
+  max-width: 200px;
+}
+
+
+
+
+
+
+
+
+/* This stuff shold stay at the bottom of the file */
+
+.selected .array-item {
+  border-left-color: #8ff;
+}
+
+.selected, .code-button.selected {
+  background: #cff;
+  position: relative;
+  z-index: 1;
+}
+
+.selected .literal {
+  background: #D4F1F5;
+}
+
+.selected .object-literal {
+  background: #D4F1F5;
+}
+
+.selected .object-literal .code-button.literal {
+  background: #E7FAFB;
+}
+
+.selected .array-literal .key,
+.selected .array-literal .literal {
+  background: #d6efef;
+}
+
+
+.selector {
+  display: none;
+  color: #fcffff;
+  text-align: right;
+  font-size: 32px;
+  line-height: 32px;
+  padding-right: 50px;
+  padding-top: 1px; 
+  box-sizing: border-box;
+  position: fixed;
+  z-index: -1;
+  content: " ";
+  width: 90%;
+  height: 52px;
+  background: #dff;
+  border: 10px solid #f5ffff;
+  text-shadow:
+    3px -3px 0px #eff,
+    -2px 2px 0px #ceffff;
+  left: 50%;
+  margin-left: -45%;
+  top: 110px; /* SELECTOR_TOP - border width */
+}
+
+@media (max-width: 700px) {
+  .selector {
+    width: 95%;
+    border-right-width: 0;
+  }
+}
+
+

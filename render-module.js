@@ -11,15 +11,15 @@ module.exports = library.export(
 
       var expression = anExpression.functionLiteral(module.func)
 
-      renderExpression(bridge, functionLiteral, program)
+      var expressionPartial = bridge.partial()
+
+      renderExpression(expressionPartial, functionLiteral, program)
 
       var programName = module.name || "unnamed"
 
       bootProgram.prepareBridge(bridge)
 
       var program = anExpression.program()
-
-      drawExpression(bridge, functionLiteral, program)
 
       bridge.asap(
         bridgeModule(library, "boot-program", bridge).withArgs(programName, program.data())
@@ -35,7 +35,7 @@ module.exports = library.export(
       var title = element(
         module.name,
         element.style({
-          "color": "cyan",
+          "color": "#2ef9f9",
           "font-weight": "bold",
           "font-size": "1.2em",
           "line-height": "2em",
@@ -43,7 +43,7 @@ module.exports = library.export(
         })
       )
 
-      bridge.send(element(title, program.element))
+      bridge.send(element(title, expressionPartial))
     }
 
     renderModule.prepareSite = function(site) {

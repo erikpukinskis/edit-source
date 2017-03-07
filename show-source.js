@@ -129,7 +129,9 @@ module.exports = library.export(
 
       var program = anExpression.program()
 
-      renderExpression(bridge, functionLiteral, program)
+      var expressionPartial = bridge.partial()
+
+      renderExpression(expressionPartial, functionLiteral, program)
 
       var programName = module.name || "unnamed"
 
@@ -157,7 +159,7 @@ module.exports = library.export(
         })
       )
 
-      bridge.send(element(title, program.element))
+      bridge.send(element(title, expressionPartial))
     }
 
     function prepareBridge(bridge) {

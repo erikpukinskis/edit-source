@@ -3,7 +3,7 @@ var runTest = require("run-test")(require)
 
 runTest(
   "convert object to expression",
-  ["./an-expression"],
+  ["an-expression"],
   function(expect, done, anExpression) {
     var expression = anExpression.objectLiteral({balance: 10})
 
@@ -16,7 +16,7 @@ runTest(
 
 runTest(
   "function literals inside function literals",
-  ["./an-expression"],
+  ["an-expression"],
   function(expect, done, anExpression) {
     var expression = anExpression.functionLiteral(funcWithinFunc)
 

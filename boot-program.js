@@ -2,15 +2,12 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "boot-program",
-  ["./module", "./line-controls", "./program"],
-  function(Module, lineControls, Program) {
-
+  ["./module", "an-expression"],
+  function(Module, anExpression) {
 
     function bootProgram(programName, programData) {
 
-      var program = new Program(programData)
-
-      var controls = lineControls(program)
+      var program = new anExpression.program(programData)
 
       var mod = new Module(program, programName)
 

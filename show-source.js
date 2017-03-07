@@ -2,8 +2,8 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "show-source",
-  ["web-element", "function-call", "make-request", "browser-bridge", "./draw-expression", "./an-expression", "bridge-module", "./boot-program"],
-  function(element, functionCall, makeRequest, BrowserBridge, drawExpression, anExpression, bridgeModule, bootProgram) {
+  ["web-element", "function-call", "make-request", "browser-bridge", "render-expression", "an-expression", "bridge-module", "./boot-program"],
+  function(element, functionCall, makeRequest, BrowserBridge, renderExpression, anExpression, bridgeModule, bootProgram) {
 
     var left = element(
       ".bolt-bit.left",
@@ -86,6 +86,8 @@ module.exports = library.export(
 
     function prepareSite(site, lib) {
       
+      renderExpression.prepareSite(site)
+
       site.addRoute("get", "/edit-source/:moduleName", function(request, response) {
 
         var name = request.params.moduleName
@@ -94,15 +96,9 @@ module.exports = library.export(
 
         lib.using([name], function(singleton) {
           renderModule(bridge, singleton)
-        })
+        })  
 
       })
-
-      site.addRoute(
-        "get",
-        "/render-module/styles.css",
-        site.sendFile(__dirname, "styles.css")
-      )
 
       site.addRoute(
         "get",
@@ -131,7 +127,9 @@ module.exports = library.export(
 
       var functionLiteral = anExpression.functionLiteral(module.func)
 
-      var program = drawExpression(functionLiteral, bridge)
+      var program = anExpression.program()
+
+      renderExpression(bridge, functionLiteral, program)
 
       var programName = module.name || "unnamed"
 

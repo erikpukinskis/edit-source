@@ -2,20 +2,24 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "render-module",
-  ["./draw-expression", "./an-expression", "browser-bridge", "bridge-module", "./boot-program", "web-element"],
-  function(drawExpression, anExpression, BrowserBridge, bridgeModule, bootProgram, element) {
+  ["render-expression", "an-expression", "browser-bridge", "bridge-module", "./boot-program", "web-element"],
+  function(renderExpression, anExpression, BrowserBridge, bridgeModule, bootProgram, element) {
 
     function renderModule(bridge, singleton) {
 
       var module = singleton.__nrtvModule
 
-      var functionLiteral = anExpression.functionLiteral(module.func)
+      var expression = anExpression.functionLiteral(module.func)
 
-      var program = drawExpression(functionLiteral, bridge)
+      renderExpression(bridge, functionLiteral, program)
 
       var programName = module.name || "unnamed"
 
       bootProgram.prepareBridge(bridge)
+
+      var program = anExpression.program()
+
+      drawExpression(bridge, functionLiteral, program)
 
       bridge.asap(
         bridgeModule(library, "boot-program", bridge).withArgs(programName, program.data())
@@ -44,8 +48,6 @@ module.exports = library.export(
 
     renderModule.prepareSite = function(site) {
       
-
-
     }
 
     return renderModule

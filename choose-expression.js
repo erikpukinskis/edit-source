@@ -2,7 +2,7 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "choose-expression",
-  ["./menu", "./an-expression"],
+  ["./menu", "an-expression"],
   function(menu, anExpression) {
 
     var expressionChoices = [

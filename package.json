@@ -13,9 +13,9 @@
     "tell-the-universe": "*",
     "make-request": "*",
     "add-html": "*",
-    "bridge-module": "*",
     "function-call": "*",
-    "make-it-editable": "*"
+    "an-expression": "*",
+    "render-expression": "*"
   },
   "scripts": {
     "start": "node start",

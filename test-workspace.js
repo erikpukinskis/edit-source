@@ -2,7 +2,7 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "work-space/test",
-  ["make-request", "browser-bridge", "./voxel", "web-element"],
+  ["make-request", "browser-bridge", "./old-voxel", "web-element"],
   function(makeRequest, BrowserBridge, voxel, element) {
 
     var spec = special("foo")

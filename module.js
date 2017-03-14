@@ -10,8 +10,19 @@ module.exports = library.export(
       this.name = name
       this.run = run.bind(this)
       this.updateDependencies = updateDependencies.bind(this)
+      this.updateAndRun = updateAndRun.bind(this)
       this.depsAvailable = false
       this.loadDependencies = loadDependencies.bind(this)
+
+      var dependencies = program.rootExpression().argumentNames
+
+      this.loadDependencies(dependencies, this.run)
+
+      program.onchanged(this.run)
+
+      var mod = this
+
+      program.onnewexpression(this.updateAndRun)
     }
 
     function run() {
@@ -25,10 +36,19 @@ module.exports = library.export(
       out.innerHTML = ""
 
       var moduleExpression = packageExpression(this.program.rootExpression())
+  
 
-      anExpression.run(moduleExpression, this.name)
+      var js = anExpression.toJavascript(moduleExpression)
+
+      js = js + "\n//# sourceURL="+this.name+".js"
+
       window.__nrtvFocusSelector = null
 
+      return eval(js)
+    }
+
+    function updateAndRun(parent, line) {
+      this.updateDependencies(parent, line, this.run)
     }
 
     function packageExpression(functionLiteral) {

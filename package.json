@@ -15,7 +15,9 @@
     "add-html": "*",
     "function-call": "*",
     "an-expression": "*",
-    "render-expression": "*"
+    "render-expression": "*",
+    "javascript-to-ezjs": "*",
+    "identifiable": "*"
   },
   "scripts": {
     "start": "node start",

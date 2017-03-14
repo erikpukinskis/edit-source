@@ -9,8 +9,6 @@ module.exports = library.export(
 
     function showSource(bridge, source, moduleName) {
 
-      prepareBridge(bridge)
-
       var functionLiteral = javascriptToEzjs(source)
 
       var program = new Program()

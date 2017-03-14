@@ -4,8 +4,8 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "show-source",
-  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "./boot-program", "./program", "bridge-module", "./module"],
-  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, bootProgram, Program, bridgeModule, Module) {
+  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "./program", "bridge-module", "./module"],
+  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, Program, bridgeModule, Module) {
 
     function showSource(bridge, source, moduleName) {
 
@@ -22,14 +22,18 @@ module.exports = library.export(
       Module.prepareBridge(bridge)
 
       bridge.asap(
-        bridgeModule(library, "boot-program", bridge).withArgs(moduleName, program.data())
-      )
+        [
+          bridgeModule(library, "./program", bridge),
+          bridgeModule(library, "./module", bridge),
+          moduleName,
+          program.data(),
+        ],
+        function(Program, Module, moduleName, programData) {
 
-      bridge.addToHead(
-        element("link", {
-          rel: "stylesheet",
-          href: "/render-module/styles.css"
-        })
+          var program = new Program(programData)
+
+            var mod = new Module(program, moduleName)
+        }
       )
 
       var title = element(
@@ -42,6 +46,8 @@ module.exports = library.export(
           "margin-top": "-2em",
         })
       )
+
+      bridge.left().send(element(".output"))
 
       bridge.send(element(title, expressionPartial))
     }

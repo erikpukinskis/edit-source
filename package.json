@@ -1,6 +1,6 @@
 {
   "name": "show-source",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Button for editing the source code of a web application",
   "main": "show-source.js",
   "dependencies": {

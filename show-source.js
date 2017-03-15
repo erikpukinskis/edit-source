@@ -37,6 +37,11 @@ module.exports = library.export(
       bridge.send(element(title, expressionPartial))
     }
 
+    showSource.fromLibrary = function(bridge, lib, moduleName) {
+      var module = lib.get(moduleName).__nrtvModule
+      return showSource(bridge, module.func.toString(), module.name)
+    }
+
 
     showSource.button = function(targetVoxel, singleton) {
 

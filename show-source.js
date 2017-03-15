@@ -7,18 +7,18 @@ module.exports = library.export(
   ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "an-expression", "bridge-module", "./boot-module", "an-expression"],
   function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule) {
 
-    function showSource(bridge, source, moduleName) {
-
+    function showSource(voxel, source, moduleName) {
+      
       var functionLiteral = javascriptToEzjs(source)
 
       var tree = anExpression()
 
-      var expressionPartial = bridge.partial()
+      var expressionPartial = voxel.partial()
 
       renderExpression(expressionPartial, functionLiteral, tree)
 
-      bridge.asap(
-        bridgeModule(library, "./boot-module", bridge).withArgs(moduleName, tree.data())
+      voxel.asap(
+        bridgeModule(library, "./boot-module", voxel).withArgs(moduleName, tree.data())
       )
 
       var title = element(
@@ -32,9 +32,9 @@ module.exports = library.export(
         })
       )
 
-      bridge.left().send(element(".output"))
+      voxel.left().send(element(".output"))
 
-      bridge.send(element(title, expressionPartial))
+      voxel.send(element(title, expressionPartial))
     }
 
     showSource.fromLibrary = function(bridge, lib, moduleName) {

@@ -4,34 +4,21 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "show-source",
-  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "./program", "bridge-module", "./module"],
-  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, Program, bridgeModule, Module) {
+  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "an-expression", "bridge-module", "./boot-module", "an-expression"],
+  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule) {
 
     function showSource(bridge, source, moduleName) {
 
       var functionLiteral = javascriptToEzjs(source)
 
-      var program = new Program()
+      var tree = anExpression()
 
       var expressionPartial = bridge.partial()
 
-      renderExpression(expressionPartial, functionLiteral, program)
-
-      Module.prepareBridge(bridge)
+      renderExpression(expressionPartial, functionLiteral, tree)
 
       bridge.asap(
-        [
-          bridgeModule(library, "./program", bridge),
-          bridgeModule(library, "./module", bridge),
-          moduleName,
-          program.data(),
-        ],
-        function(Program, Module, moduleName, programData) {
-
-          var program = new Program(programData)
-
-            var mod = new Module(program, moduleName)
-        }
+        bridgeModule(library, "./boot-module", bridge).withArgs(moduleName, tree.data())
       )
 
       var title = element(

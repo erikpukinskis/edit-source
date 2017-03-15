@@ -1,12 +1,22 @@
 var library = require("module-library")(require)
 
 module.exports = library.export(
-  "module",
+  "boot-module",
   ["an-expression", "function-call"],
   function(anExpression, functionCall) {
 
+    function bootModule(moduleName, treeData) {
+      // bridge.asap("var using = library.using.bind(library)")
+
+      var tree = anExpression(treeData)
+      var module = new Module(tree, moduleName)
+
+      return module
+    }
+
     function Module(program, name) {
       this.program = program
+      this.tree = program
       this.name = name
       this.run = run.bind(this)
       this.updateDependencies = updateDependencies.bind(this)
@@ -14,7 +24,7 @@ module.exports = library.export(
       this.depsAvailable = false
       this.loadDependencies = loadDependencies.bind(this)
 
-      var dependencies = program.rootExpression().argumentNames
+      var dependencies = program.root().argumentNames
 
       this.loadDependencies(dependencies, this.run)
 
@@ -35,7 +45,7 @@ module.exports = library.export(
       }
       out.innerHTML = ""
 
-      var moduleExpression = packageExpression(this.program.rootExpression())
+      var moduleExpression = packageExpression(this.program.root())
   
 
       var js = anExpression.toJavascript(moduleExpression)
@@ -112,7 +122,7 @@ module.exports = library.export(
 
     function loadDependencies(deps, callback) {
       var program = this.program
-      var package = program.rootExpression()
+      var package = program.root()
 
       deps.forEach(function(dep) {
         addScriptTag(dep)
@@ -127,7 +137,7 @@ module.exports = library.export(
       if (line.kind != "function call") { return }
 
       var program = this.program
-      var package = program.rootExpression()
+      var package = program.root()
       var alreadyIn = package.argumentNames
 
       getDeps(line).forEach(requireIt)
@@ -221,11 +231,7 @@ module.exports = library.export(
       }
     }
 
-    Module.prepareBridge = function(bridge) {
-      bridge.asap("var using = library.using.bind(library)")
-    }
-
-    return Module
+    return bootModule
   }
 )
 

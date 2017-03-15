@@ -23,7 +23,7 @@ var EXAMPLE_FUNCTION = function(webElement, basicStyles) {
     var letter = element([
       element(
         "img.hero",
-        {src: "/housing-bond/tiny.jpg"}
+        {"src": "/housing-bond/tiny.jpg"}
       ),
       element(
         "h1",

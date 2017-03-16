@@ -10,7 +10,7 @@ library.using(
     var leftBracket = element(".array-symbol", "[")
     var rightBracket = element(".array-symbol", "]")
     var comma = element(".comma-symbol", ",")
-
+    var equals = element(".equals-symbol", "=")
 
     var page  = element(".lines", [
       element(element(".function-symbol", "function"), element(".function-name", "buildAHouse"), leftParen),
@@ -19,9 +19,9 @@ library.using(
       element(".depth-1.argument-name", "library", comma),
       element(".depth-1.argument-name", "renderBond", rightParen, leftCurly),
       element(".scope.depth-1", [
-        element(element(".variable-symbol", "var"), "buildPanel ="),
+        element(element(".variable-symbol", "var"), element(".reference", "buildPanel"), equals),
         element(".depth-1",
-          "issueBond",
+          element(".call", "issueBond"),
           leftParen,
           leftBracket
         ),
@@ -40,46 +40,75 @@ library.using(
         ]),
 
         element(".break"),
-        element("issueBond.expense", leftParen),
-        element(".depth-1", "buildPanel", comma),
+        element(element(".call", "issueBond.expense"), leftParen),
+        element(".depth-1", element(".reference", "buildPanel"), comma),
         element(".depth-1", "labor", comma),
         element(".depth-1", "$100", rightParen),
         element(".break"),
-        element("issueBond.expense", leftParen),
-        element(".depth-1", "buildPanel", comma),
+        element(element(".call", "issueBond.expense"), leftParen),
+        element(".depth-1", element(".reference", "buildPanel"), comma),
         element(".depth-1", "steel studs", comma),
         element(".depth-1", "$20", rightParen),
         element(".break"),
-        element("issueBond.expense", leftParen),
-        element(".depth-1", "buildPanel", comma),
+        element(element(".call", "issueBond.expense"), leftParen),
+        element(".depth-1", element(".reference", "buildPanel"), comma),
         element(".depth-1", "plywood", comma),
         element(".depth-1", "$10", rightParen),
         element(".break"),
-        element("webHost.hostModule", leftParen),
-        element(".depth-1", "library", comma),
+        element(element(".call", "webHost.hostModule"), leftParen),
+        element(".depth-1", element(".call", "library"), comma),
         element(".depth-1", "render-bond", comma),
-        element(".depth-1", "buildPanel", rightParen),
+        element(".depth-1", element(".call", "buildPanel"), rightParen),
         element(".break"),
-        element(element(".return-symbol", "return"), "buildPanel", rightCurly),
+        element(element(".return-symbol", "return"), element(".call", "buildPanel"), rightCurly),
       ])
     ])
 
     var canary = "#f5df2f"
     var gunmetal = "#bec9d6"
+    var black =  "#557"
 
     var stylesheet = element.stylesheet([
       element.style(".lines", {
         "font-family": "sans-serif",
         "font-size": "15pt",
-        "color": "#557",
+        "color": black,
         "line-height": "1.2em",
       }),
 
       element.style(".comma-symbol", {
-        "color": "#557",
+        "color": black,
         "display": "inline-block",
         "font-weight": "bold",
       }),
+
+      element.style(".variable-symbol", {
+        "color": black,
+        "display": "inline-block",
+        "padding-right": "0.5em",
+        "font-weight": "bold",
+      }),
+
+      element.style(".reference::after", {
+        "content": "•",
+        "vertical-align": "0.25em",
+        "margin-top": "-0.25em",
+        "color": "#26de26",
+        "font-weight": "bold",
+        "display": "inline-block",
+      }),
+
+      element.style(".call, .reference", {
+        "display": "inline",
+      }),
+
+      element.style(".equals-symbol", {
+        "color": black,
+        "display": "inline-block",
+        "padding-left": "0.5em",
+        "font-weight": "bold",
+      }),
+
 
       element.style(".depth-1", {
         "margin-left": "1em",
@@ -110,7 +139,7 @@ library.using(
       }),
 
       element.style(".scope-symbol", {
-        "color": canary,
+        "color": "#f5da6f",
         "display": "inline-block",
         "padding-left": "0.5em",
         "font-weight": "bold",
@@ -122,12 +151,11 @@ library.using(
       }),
 
       element.style(".return-symbol", {
-        "color": canary,
+        "color": "#dec167",
         "display": "inline-block",
         "padding-right": "0.5em",
         "font-weight": "bold",
       }),
-
 
       element.style(".function-symbol", {
         "color": gunmetal,
@@ -151,25 +179,10 @@ library.using(
       }),
 
 
-      element.style(".return-symbol", {
-        "color": canary,
-        "display": "inline-block",
-        "padding-right": "0.5em",
-        "font-weight": "bold",
-      }),
-
       element.style(".call-symbol", {
         "color": gunmetal,
         "display": "inline-block",
         "padding-left": "0.5em",
-        "font-weight": "bold",
-      }),
-
-
-      element.style(".variable-symbol", {
-        "color": "black",
-        "display": "inline-block",
-        "padding-right": "0.5em",
         "font-weight": "bold",
       }),
 
@@ -181,38 +194,4 @@ library.using(
     })
   }
 )
-
-
-
-//      function buildAHouse(
-//        issueBond,
-//        webHost,
-//        library,
-//        renderBond ){
-//          var buildPanel =
-//            issueBond([
-//              "cut studs to length",
-//              "cut track to length",
-//              "crimp",
-//              "add sheathing",
-//              "flipsulate",
-//              "add sheathing" ])
-//          issueBond.expense(
-//            buildPanel,
-//            "labor",
-//            "$100")
-//          issueBond.expense(
-//            buildPanel,
-//            "steel studs",
-//            "$20" )
-//          issueBond.expense(
-//            buildPanel,
-//            "plywood",
-//            "$10" )
-//          webHost.hostModule(
-//            library,
-//            "render-bond",
-//            buildPanel )
-//          return buildPanel }
-
 

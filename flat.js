@@ -9,11 +9,11 @@ library.using(
     var rightCurly = element(".scope-symbol", "}")
     var leftBracket = element(".array-symbol", "[")
     var rightBracket = element(".array-symbol", "]")
-    var comma = element(".comma-symbol", ",")
+    var comma = element(".comma-symbol", ", ")
     var equals = element(".equals-symbol", "=")
 
     var page  = element(".lines", [
-      element(element(".function-symbol", "function"), element(".function-name", "buildAHouse"), leftParen),
+      element(element(".function-symbol", "function "), element(".function-name", "buildAHouse"), leftParen),
       element(".depth-1.argument-name", "issueBond", comma),
       element(".depth-1.argument-name", "webHost", comma),
       element(".depth-1.argument-name", "library", comma),
@@ -69,6 +69,10 @@ library.using(
     var black =  "#557"
 
     var stylesheet = element.stylesheet([
+      element.style("div", {
+        "border": "1px solid lime",
+      }),
+      
       element.style(".lines", {
         "font-family": "sans-serif",
         "font-size": "15pt",
@@ -89,14 +93,14 @@ library.using(
         "font-weight": "bold",
       }),
 
-      element.style(".reference::after", {
-        "content": "•",
-        "vertical-align": "0.25em",
-        "margin-top": "-0.25em",
-        "color": "#26de26",
-        "font-weight": "bold",
-        "display": "inline-block",
-      }),
+      // element.style(".reference::after", {
+      //   "content": "•",
+      //   "vertical-align": "0.25em",
+      //   "margin-top": "-0.25em",
+      //   "color": "#26de26",
+      //   "font-weight": "bold",
+      //   "display": "inline-block",
+      // }),
 
       element.style(".call, .reference", {
         "display": "inline",
@@ -139,7 +143,7 @@ library.using(
       }),
 
       element.style(".scope-symbol", {
-        "color": "#f5da6f",
+        "color": canary, //"#f5da6f",
         "display": "inline-block",
         "padding-left": "0.5em",
         "font-weight": "bold",
@@ -151,7 +155,7 @@ library.using(
       }),
 
       element.style(".return-symbol", {
-        "color": "#dec167",
+        "color": "#eccd6b",
         "display": "inline-block",
         "padding-right": "0.5em",
         "font-weight": "bold",

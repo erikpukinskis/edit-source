@@ -136,14 +136,17 @@ library.using(
         "font-weight": "bold",
       }),
 
-      element.style(".argument-name, .function-name", {
+      element.style(".argument-name", {
+        "color": gunmetal,
+      }),
+
+      element.style(".function-name", {
         "color": gunmetal,
         "display": "inline",
       }),
 
       element.style(".argument-name .comma-symbol", {
         "color": gunmetal,
-        "display": "inline-block",
         "font-weight": "bold",
       }),
 

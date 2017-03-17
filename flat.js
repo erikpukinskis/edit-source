@@ -5,13 +5,16 @@ library.using(
   function(host, element) {
     var leftParen = element(".call-symbol", "(")
     var rightParen = element(".call-symbol", ")")
-    var leftCurly = element(".scope-symbol", "{")
-    var rightCurly = element(".scope-symbol", "}")
+    var openFunction = element(".scope-symbol", "{")
+    var closeFunction = element(".scope-symbol", "}")
+    var openObject = element(".object-delimiter", "{")
+    var closeObject = element(".object-delimiter", "}")
     var leftBracket = element(".array-symbol", "[")
     var rightBracket = element(".array-symbol", "]")
     var comma = element(".comma-symbol", ", ")
     var equals = element(".equals-symbol", "=")
     var br = element("br")
+    var colon = element(".colon-symbol", ":")
 
     var page = element(".expression", [
       element(
@@ -32,7 +35,7 @@ library.using(
           br,
           "renderBond",
           rightParen,
-          leftCurly,
+          openFunction,
         ]),
         element(".function-body", [
 
@@ -82,6 +85,28 @@ library.using(
 
           element(".break"),
 
+          element(".call", "checkBook"),
+          leftParen,
+          element(".arguments", [
+            "some string",
+            comma,
+            openObject,
+            element(".object-pairs", [
+              "one of",
+              colon,
+              "1001",
+              br,
+              "two-w3",
+              colon,
+              "2222",
+              closeObject,
+              rightParen
+            ]),
+          ]),
+
+
+          element(".break"),
+
           "webHost.hostModule",
           leftParen,
           element(".arguments", [
@@ -99,7 +124,7 @@ library.using(
 
           element(".return-symbol", "return"),
           "buildPanel",
-          rightCurly,
+          closeFunction,
 
 
         ]),
@@ -113,6 +138,7 @@ library.using(
     var canary = "#f5df2f"
     var gunmetal = "#bec9d6"
     var black =  "#557"
+    var electric = "#a9a9ff"
 
     var stylesheet = element.stylesheet([
 
@@ -127,6 +153,13 @@ library.using(
         "color": gunmetal,
         "display": "inline-block",
         "font-weight": "bold",
+      }),
+
+      element.style(".colon-symbol", {
+        "color": electric,
+        "display": "inline-block",
+        "font-weight": "bold",
+        "margin": "0 0.5em",
       }),
 
       element.style(".array-items .comma-symbol, .arguments .comma-symbol", {
@@ -158,15 +191,20 @@ library.using(
       }),
 
       element.style(".array-symbol", {
-        "color": "#a9a9ff",
+        "color": electric,
         "display": "inline-block",
         "padding-left": "0.5em",
         "font-weight": "bold",
       }),
 
       element.style(".array-items", {
+        "border-left": "0.15em solid #a9a9ff",
         "margin-left": "1em",
-        "border-left": "3px solid #a9a9ff",
+        "padding-left": "0.5em",
+      }),
+
+      element.style(".object-pairs", {
+        "border-left": "0.15em solid "+electric,
         "padding-left": "0.5em",
       }),
 
@@ -180,6 +218,13 @@ library.using(
 
       element.style(".scope-symbol", {
         "color": canary,
+        "display": "inline-block",
+        "padding-left": "0.5em",
+        "font-weight": "bold",
+      }),
+
+      element.style(".object-delimiter", {
+        "color": electric,
         "display": "inline-block",
         "padding-left": "0.5em",
         "font-weight": "bold",
@@ -200,7 +245,7 @@ library.using(
       }),
 
       element.style(".function-body", {
-        "border-left": "3px solid "+canary,
+        "border-left": "0.15em solid "+canary,
         "padding-left": "0.5em",
       }),
 

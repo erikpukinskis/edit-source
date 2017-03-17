@@ -11,69 +11,110 @@ library.using(
     var rightBracket = element(".array-symbol", "]")
     var comma = element(".comma-symbol", ", ")
     var equals = element(".equals-symbol", "=")
+    var br = element("br")
 
-    var page  = element(".lines", [
-      element(element(".function-symbol", "function "), element(".function-name", "buildAHouse"), leftParen),
-      element(".depth-1.argument-name", "issueBond", comma),
-      element(".depth-1.argument-name", "webHost", comma),
-      element(".depth-1.argument-name", "library", comma),
-      element(".depth-1.argument-name", "renderBond", rightParen, leftCurly),
-      element(".scope.depth-1", [
-        element(element(".variable-symbol", "var"), element(".reference", "buildPanel"), equals),
-        element(".depth-1",
-          element(".call", "issueBond"),
+    var page = element(".expression", [
+      element(
+        element(".function-symbol", "function "),
+        element(".function-name", "buildAHouse"),
+        leftParen
+      ),
+      element(".function-body", [      
+        element(".argument-name", "issueBond"),
+        comma,
+        br,
+        element(".argument-name", "webHost"),
+        comma,
+        br,
+        element(".argument-name", "library"),
+        comma,
+        br,
+        element(".argument-name", "renderBond"),
+        rightParen,
+        leftCurly,
+        element(".lines", [
+
+          element(".variable-symbol", "var"),
+          element(".reference", "buildPanel"),
+          equals,
+          element(".rhs", [
+            element(".call", "issueBond"),
+            leftParen,
+            leftBracket,
+            element(".array-items", [
+              element(".depth-2.array-item", "cut studs to length"),
+              comma,
+              br,
+              element(".depth-2.array-item", "cut track to length"),
+              comma,
+              br,
+              element(".depth-2.array-item", "crimp"),
+              comma,
+              br,
+              element(".depth-2.array-item", "add sheathing"),
+              comma,
+              br,
+              element(".depth-2.array-item", "flipsulate"),
+              comma,
+              br,
+              element(".depth-2.array-item", "add sheathing"),
+              rightBracket,
+              rightParen,
+            ]),
+          ]),
+
+          element(".break"),
+
+          element(".call", "issueBond.expense"),
           leftParen,
-          leftBracket
-        ),
-
-        element(".array", [
-          element(".depth-2.array-item", "cut studs to length", comma),
-          element(".depth-2.array-item", "cut track to length", comma),
-          element(".depth-2.array-item", "crimp", comma),
-          element(".depth-2.array-item", "add sheathing", comma),
-          element(".depth-2.array-item", "flipsulate", comma),
-          element(".depth-2.array-item",
-            "add sheathing",
-            rightBracket,
+          element(".arguments", [
+            "buildPanel",
+            comma,
+            br,
+            "labor",
+            comma,
+            br,
+            "$100",
             rightParen
-          ),
-        ]),
+          ]),
 
-        element(".break"),
-        element(element(".call", "issueBond.expense"), leftParen),
-        element(".depth-1", element(".reference", "buildPanel"), comma),
-        element(".depth-1", "labor", comma),
-        element(".depth-1", "$100", rightParen),
-        element(".break"),
-        element(element(".call", "issueBond.expense"), leftParen),
-        element(".depth-1", element(".reference", "buildPanel"), comma),
-        element(".depth-1", "steel studs", comma),
-        element(".depth-1", "$20", rightParen),
-        element(".break"),
-        element(element(".call", "issueBond.expense"), leftParen),
-        element(".depth-1", element(".reference", "buildPanel"), comma),
-        element(".depth-1", "plywood", comma),
-        element(".depth-1", "$10", rightParen),
-        element(".break"),
-        element(element(".call", "webHost.hostModule"), leftParen),
-        element(".depth-1", element(".call", "library"), comma),
-        element(".depth-1", "render-bond", comma),
-        element(".depth-1", element(".call", "buildPanel"), rightParen),
-        element(".break"),
-        element(element(".return-symbol", "return"), element(".call", "buildPanel"), rightCurly),
-      ])
+          element(".break"),
+
+          element(".call", "webHost.hostModule"),
+          leftParen,
+          element(".arguments", [
+            "library",
+            comma,
+            br,
+            "render-bond",
+            comma,
+            br,
+            "buildPanel",
+            rightParen,
+          ]),
+
+          element(".break"),
+
+          element(".return-symbol", "return"),
+          element(".call", "buildPanel"),
+          rightCurly,
+
+
+        ]),
+      ]),
     ])
+
+
+
+
 
     var canary = "#f5df2f"
     var gunmetal = "#bec9d6"
     var black =  "#557"
 
     var stylesheet = element.stylesheet([
-      element.style("div", {
-        "border": "1px solid lime",
-      }),
-      
-      element.style(".lines", {
+
+      element.style(".expression", {
         "font-family": "sans-serif",
         "font-size": "15pt",
         "color": black,
@@ -81,9 +122,13 @@ library.using(
       }),
 
       element.style(".comma-symbol", {
-        "color": black,
+        "color": gunmetal,
         "display": "inline-block",
         "font-weight": "bold",
+      }),
+
+      element.style(".array-items .comma-symbol, .arguments .comma-symbol", {
+        "color": black,
       }),
 
       element.style(".variable-symbol", {
@@ -92,15 +137,6 @@ library.using(
         "padding-right": "0.5em",
         "font-weight": "bold",
       }),
-
-      // element.style(".reference::after", {
-      //   "content": "•",
-      //   "vertical-align": "0.25em",
-      //   "margin-top": "-0.25em",
-      //   "color": "#26de26",
-      //   "font-weight": "bold",
-      //   "display": "inline-block",
-      // }),
 
       element.style(".call, .reference", {
         "display": "inline",
@@ -113,19 +149,6 @@ library.using(
         "font-weight": "bold",
       }),
 
-
-      element.style(".depth-1", {
-        "margin-left": "1em",
-      }),
-      element.style(".depth-2", {
-        "margin-left": "2em",
-      }),
-      element.style(".depth-3", {
-        "margin-left": "3em",
-      }),
-      element.style(".depth-4", {
-        "margin-left": "4em",
-      }),
       element.style(".break", {
         "height": "0.75em",
         "width": "1.5em",
@@ -137,9 +160,19 @@ library.using(
         "padding-left": "0.5em",
         "font-weight": "bold",
       }),
-      element.style(".array-item", {
+
+      element.style(".array-items", {
+        "margin-left": "0.5em",
         "border-left": "3px solid #a9a9ff",
         "padding-left": "0.5em",
+      }),
+
+      element.style(".array-item", {
+        "display": "inline-block",
+      }),
+
+      element.style(".arguments", {
+        "margin-left": "0.5em",
       }),
 
       element.style(".scope-symbol", {
@@ -149,17 +182,14 @@ library.using(
         "font-weight": "bold",
       }),
 
-      element.style(".scope", {
-        "border-left": "3px solid "+canary,
-        "padding-left": "0.5em",
-      }),
-
       element.style(".return-symbol", {
         "color": "#eccd6b",
         "display": "inline-block",
         "padding-right": "0.5em",
         "font-weight": "bold",
       }),
+
+
 
       element.style(".function-symbol", {
         "color": gunmetal,
@@ -168,8 +198,24 @@ library.using(
         "font-weight": "bold",
       }),
 
+      element.style(".function-body", {
+        "margin-left": "0.5em",
+      }),
+
+      element.style(".lines", {
+        "border-left": "3px solid "+canary,
+        "padding-left": "0.5em",
+      }),
+
+
+
+      element.style(".rhs", {
+        "margin-left": "0.5em",
+      }),
+
       element.style(".argument-name", {
         "color": gunmetal,
+        "display": "inline-block",
       }),
 
       element.style(".function-name", {

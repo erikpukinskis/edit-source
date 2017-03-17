@@ -19,45 +19,47 @@ library.using(
         element(".function-name", "buildAHouse"),
         leftParen
       ),
-      element(".function-body", [      
-        element(".argument-name", "issueBond"),
-        comma,
-        br,
-        element(".argument-name", "webHost"),
-        comma,
-        br,
-        element(".argument-name", "library"),
-        comma,
-        br,
-        element(".argument-name", "renderBond"),
-        rightParen,
-        leftCurly,
-        element(".lines", [
+      element(".function", [   
+        element(".function-signature", [   
+          "issueBond",
+          comma,
+          br,
+          "webHost",
+          comma,
+          br,
+          "library",
+          comma,
+          br,
+          "renderBond",
+          rightParen,
+          leftCurly,
+        ]),
+        element(".function-body", [
 
           element(".variable-symbol", "var"),
-          element(".reference", "buildPanel"),
+          "buildPanel",
           equals,
           element(".rhs", [
             element(".call", "issueBond"),
             leftParen,
             leftBracket,
             element(".array-items", [
-              element(".depth-2.array-item", "cut studs to length"),
+              "cut studs to length",
               comma,
               br,
-              element(".depth-2.array-item", "cut track to length"),
+              "cut track to length",
               comma,
               br,
-              element(".depth-2.array-item", "crimp"),
+              "crimp",
               comma,
               br,
-              element(".depth-2.array-item", "add sheathing"),
+              "add sheathing",
               comma,
               br,
-              element(".depth-2.array-item", "flipsulate"),
+              "flipsulate",
               comma,
               br,
-              element(".depth-2.array-item", "add sheathing"),
+              "add sheathing",
               rightBracket,
               rightParen,
             ]),
@@ -80,7 +82,7 @@ library.using(
 
           element(".break"),
 
-          element(".call", "webHost.hostModule"),
+          "webHost.hostModule",
           leftParen,
           element(".arguments", [
             "library",
@@ -96,7 +98,7 @@ library.using(
           element(".break"),
 
           element(".return-symbol", "return"),
-          element(".call", "buildPanel"),
+          "buildPanel",
           rightCurly,
 
 
@@ -154,6 +156,7 @@ library.using(
         "width": "1.5em",
         "background": "#fff"
       }),
+
       element.style(".array-symbol", {
         "color": "#a9a9ff",
         "display": "inline-block",
@@ -162,7 +165,7 @@ library.using(
       }),
 
       element.style(".array-items", {
-        "margin-left": "0.5em",
+        "margin-left": "1em",
         "border-left": "3px solid #a9a9ff",
         "padding-left": "0.5em",
       }),
@@ -172,11 +175,11 @@ library.using(
       }),
 
       element.style(".arguments", {
-        "margin-left": "0.5em",
+        "margin-left": "1em",
       }),
 
       element.style(".scope-symbol", {
-        "color": canary, //"#f5da6f",
+        "color": canary,
         "display": "inline-block",
         "padding-left": "0.5em",
         "font-weight": "bold",
@@ -189,8 +192,6 @@ library.using(
         "font-weight": "bold",
       }),
 
-
-
       element.style(".function-symbol", {
         "color": gunmetal,
         "display": "inline-block",
@@ -199,23 +200,20 @@ library.using(
       }),
 
       element.style(".function-body", {
-        "margin-left": "0.5em",
-      }),
-
-      element.style(".lines", {
         "border-left": "3px solid "+canary,
         "padding-left": "0.5em",
       }),
 
-
-
-      element.style(".rhs", {
-        "margin-left": "0.5em",
+      element.style(".function", {
+        "margin-left": "1em",
       }),
 
-      element.style(".argument-name", {
+      element.style(".rhs", {
+        "margin-left": "1em",
+      }),
+
+      element.style(".function-signature", {
         "color": gunmetal,
-        "display": "inline-block",
       }),
 
       element.style(".function-name", {
@@ -223,11 +221,10 @@ library.using(
         "display": "inline",
       }),
 
-      element.style(".argument-name .comma-symbol", {
+      element.style(".function-signature .comma-symbol", {
         "color": gunmetal,
         "font-weight": "bold",
       }),
-
 
       element.style(".call-symbol", {
         "color": gunmetal,
@@ -239,8 +236,8 @@ library.using(
     ])
 
     host.onVoxel(function(voxel) {
-      voxel.addToHead
-      voxel.send([page, stylesheet])
+      voxel.addToHead(stylesheet)
+      voxel.send(page)
     })
   }
 )

@@ -16,18 +16,38 @@ library.using(
     var br = element("br")
     var colon = element(".colon-symbol", ":")
 
-    var page = element(".expression", [
-      element(
+    var page = renderFunctionLiteral([
+
+      renderVariableAssignment(renderFunctionCall("issueBond", renderArray())),
+
+      element(".break"),
+
+      renderFunctionCall("issueBond.expense", renderExpenseArgs()),
+
+      element(".break"),
+
+      renderFunctionCall("checkBook", ["someString", comma, renderObjectLiteral()]),
+
+      element(".break"),
+
+      renderFunctionCall("showSource.hostModule", renderModuleArgs()),
+
+      element(".break"),
+
+      renderReturn(),
+    ])
+
+
+    function renderFunctionLiteral(content) {
+      return element(".function-literal", [
         element(".function-symbol", "function "),
         element(".function-name", "buildAHouse"),
-        leftParen
-      ),
-      element(".function", [   
+        leftParen,
         element(".function-signature", [   
           "issueBond",
           comma,
           br,
-          "webHost",
+          "showSource",
           comma,
           br,
           "library",
@@ -37,100 +57,107 @@ library.using(
           rightParen,
           openFunction,
         ]),
-        element(".function-body", [
-
-          element(".variable-symbol", "var"),
-          "buildPanel",
-          equals,
-          element(".rhs", [
-            element(".call", "issueBond"),
-            leftParen,
-            leftBracket,
-            element(".array-items", [
-              "cut studs to length",
-              comma,
-              br,
-              "cut track to length",
-              comma,
-              br,
-              "crimp",
-              comma,
-              br,
-              "add sheathing",
-              comma,
-              br,
-              "flipsulate",
-              comma,
-              br,
-              "add sheathing",
-              rightBracket,
-              rightParen,
-            ]),
-          ]),
-
-          element(".break"),
-
-          element(".call", "issueBond.expense"),
-          leftParen,
-          element(".arguments", [
-            "buildPanel",
-            comma,
-            br,
-            "labor",
-            comma,
-            br,
-            "$100",
-            rightParen
-          ]),
-
-          element(".break"),
-
-          element(".call", "checkBook"),
-          leftParen,
-          element(".arguments", [
-            "some string",
-            comma,
-            openObject,
-            element(".object-pairs", [
-              "one of",
-              colon,
-              "1001",
-              br,
-              "two-w3",
-              colon,
-              "2222",
-              closeObject,
-              rightParen
-            ]),
-          ]),
+        element(".function-body", content.concat([closeFunction])
+        ),
+      ])
+    }
 
 
-          element(".break"),
-
-          "webHost.hostModule",
-          leftParen,
-          element(".arguments", [
-            "library",
-            comma,
-            br,
-            "render-bond",
-            comma,
-            br,
-            "buildPanel",
-            rightParen,
-          ]),
-
-          element(".break"),
-
-          element(".return-symbol", "return"),
-          "buildPanel",
-          closeFunction,
+    function renderVariableAssignment(content) {
+      return element("span", [
+        element(".variable-symbol", "var"),
+        "buildPanel",
+        equals,
+        element(".rhs", content),
+      ])
+    }
 
 
+    function renderFunctionCall(name, content) {
+      return element("span", [
+        element(".call", name),
+        leftParen,
+        element(".arguments", content),
+        rightParen,
+      ])
+    }
+
+
+    function renderArray() {
+      return element("span", [
+        leftBracket,
+        element(".array-items", [
+          "cut studs to length",
+          comma,
+          br,
+          "cut track to length",
+          comma,
+          br,
+          "crimp",
+          comma,
+          br,
+          "add sheathing",
+          comma,
+          br,
+          "flipsulate",
+          comma,
+          br,
+          "add sheathing",
+          rightBracket,
         ]),
-      ]),
-    ])
+      ])
+    }
 
+
+    function renderExpenseArgs() {
+      return element("span", [
+        "buildPanel",
+        comma,
+        br,
+        "labor",
+        comma,
+        br,
+        "$100",
+      ])
+    }
+
+
+    function renderObjectLiteral() {
+      return element("span", [
+        openObject,
+        element(".object-pairs", [
+          "one of",
+          colon,
+          "1001",
+          br,
+          "two-w3",
+          colon,
+          "2222",
+          closeObject,
+        ])
+      ])
+    }
+
+
+    function renderModuleArgs() {
+      return element("span", [
+        "library",
+        comma,
+        br,
+        "render-bond",
+        comma,
+        br,
+        "buildPanel",
+      ])
+    }
+
+
+    function renderReturn() {
+      return element("span", [
+        element(".return-symbol", "return"),
+        "buildPanel",
+      ])
+    }
 
 
 
@@ -142,7 +169,7 @@ library.using(
 
     var stylesheet = element.stylesheet([
 
-      element.style(".expression", {
+      element.style(".function-literal", {
         "font-family": "sans-serif",
         "font-size": "15pt",
         "color": black,
@@ -245,6 +272,7 @@ library.using(
       }),
 
       element.style(".function-body", {
+        "margin-left": "1em",
         "border-left": "0.15em solid "+canary,
         "padding-left": "0.5em",
       }),
@@ -259,6 +287,7 @@ library.using(
 
       element.style(".function-signature", {
         "color": gunmetal,
+        "margin-left": "1em",
       }),
 
       element.style(".function-name", {

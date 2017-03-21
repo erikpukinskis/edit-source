@@ -5,16 +5,15 @@ module.exports = library.export(
   ["an-expression", "function-call"],
   function(anExpression, functionCall) {
 
-    function bootModule(moduleName, treeData) {
-      // bridge.asap("var using = library.using.bind(library)")
+    function bootModule(moduleName, treeData, targetSelector) {
 
       var tree = anExpression(treeData)
-      var module = new Module(tree, moduleName)
+      var module = new Module(tree, moduleName, targetSelector)
 
       return module
     }
 
-    function Module(program, name) {
+    function Module(program, name, targetSelector) {
       this.program = program
       this.tree = program
       this.name = name
@@ -23,6 +22,7 @@ module.exports = library.export(
       this.updateAndRun = updateAndRun.bind(this)
       this.depsAvailable = false
       this.loadDependencies = loadDependencies.bind(this)
+      this.targetSelector = targetSelector
 
       var dependencies = program.root().argumentNames
 
@@ -36,25 +36,37 @@ module.exports = library.export(
     }
 
     function run() {
-      window.__nrtvFocusSelector = ".output"
+      var targetSelector = window.__nrtvFocusSelector = this.targetSelector
 
-      var out = document.querySelector(".output")
+      var out = document.querySelector(this.targetSelector)
 
       if (!out) {
-        throw new Error("Looked for a .output element to render program into, but didn't find one.")
+        throw new Error("Looked for a "+this.targetSelector+" element to render program into, but didn't find one.")
       }
       out.innerHTML = ""
 
-      var moduleExpression = packageExpression(this.program.root())
-  
+      var root = this.tree.root()
 
+      var moduleExpression = packageExpression(root)
+  
       var js = anExpression.toJavascript(moduleExpression)
 
       js = js + "\n//# sourceURL="+this.name+".js"
 
       window.__nrtvFocusSelector = null
 
-      return eval(js)
+      var singleton = eval(js)
+      
+      var voxel = {
+        send: function(content) {
+          if (content.html) {
+            content = content.html()
+          }
+          document.querySelector(targetSelector).innerHTML = content 
+        }
+      }
+
+      singleton(voxel)
     }
 
     function updateAndRun(parent, line) {
@@ -194,7 +206,7 @@ module.exports = library.export(
       el.setAttribute("src", "/library/"+moduleName+".js")
       el.setAttribute("type","text/javascript")
 
-      var ready = functionCall("library.get").withArgs("module").methodCall("ready").withArgs(moduleName)
+      var ready = functionCall("library.get").withArgs("boot-module").methodCall("ready").withArgs(moduleName)
 
       el.setAttribute("onload", ready.evalable())
 
@@ -210,7 +222,7 @@ module.exports = library.export(
       }
     }
 
-    Module.ready = function(name) {
+    bootModule.ready = function(name) {
       remove(pendingScripts, name)
       if (pendingScripts.length > 0) {
         return

@@ -10,6 +10,7 @@
     "basic-styles": "*",
     "web-site": "*",
     "browser-bridge": "*",
+    "bridge-module": "*",
     "tell-the-universe": "*",
     "make-request": "*",
     "add-html": "*",

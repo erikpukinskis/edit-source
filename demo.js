@@ -1,47 +1,55 @@
 var library = require("module-library")(require)
 
-library.using(
-  ["web-host", "show-source", library.ref()],
-  function collectiveMagic(host, showSource, lib) {
 
-    host.onSite(function(site) {
-      showSource.prepareSite(site)
-    })
+library.define(
+  "render-pitch",
+  ["web-element", "basic-styles"],
+  function(webElement, basicStyles) {
 
-    host.onVoxel(function(voxel) {
-      showSource(voxel, EXAMPLE_FUNCTION.toString(), "demo")
-    })
+    function renderPitch(voxel) {
+
+      var letter = webElement([
+        webElement(
+          "h1",
+          "Dear friends,"
+        ),
+        webElement(
+          "p",
+          "I'm starting a  tiny house building business. I have built two prototypes, and made very detailed plans. I would like to build one for sale."
+        ),
+      ])
+
+      voxel.send(letter)
+    }
+
+    return renderPitch
   }
 )
 
 
 
-var EXAMPLE_FUNCTION = function(webElement, basicStyles) {
+library.using(
+  ["web-host", "show-source", library.ref(), "render-pitch"],
+  function collectiveMagic(host, showSource, lib, renderPitch) {
 
-  function renderPitch(voxel) {
+    host.onVoxel(function(voxel) {
 
-    var letter = element([
-      element(
-        "img.hero",
-        {"src": "/housing-bond/tiny.jpg"}
-      ),
-      element(
-        "h1",
-        "Dear friends,"
-      ),
-      element(
-        "p",
-        "I'm starting a  tiny house building business. I have built two prototypes, and made very detailed plans. I would like to build one for sale."
-      ),
-    ])
+      var content = voxel.below()
+
+      renderPitch(content)
+
+      showSource({
+        editorTarget: voxel.left({open: true}),
+        contentTarget: content,
+        library: lib,
+        moduleName: "render-pitch",
+      })
+
+      voxel.send()
+
+    })
   }
-
-  return renderPitch
-}
-
-
-
-
+)
 
 
 

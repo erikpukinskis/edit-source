@@ -4,42 +4,48 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "show-source",
-  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "an-expression", "bridge-module", "./boot-module", "an-expression"],
-  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule) {
+  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "an-expression", "bridge-module", "./boot-module", library.ref()],
+  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule, lib) {
 
-    function showSource(voxel, source, moduleName) {
+    function showSource(options) {
       
+      var moduleName = options.moduleName
+      var source = options.library.get(moduleName).__nrtvModule.func.toString()
+
       var functionLiteral = javascriptToEzjs(source)
 
       var tree = anExpression()
 
-      var expressionPartial = voxel.partial()
+      var editor = options.editorTarget.partial()
 
-      renderExpression(expressionPartial, functionLiteral, tree)
+      renderExpression(editor, functionLiteral, tree)
 
-      voxel.asap(
-        bridgeModule(library, "./boot-module", voxel).withArgs(moduleName, tree.data())
+      bridge.asap("var using = library.using.bind(library)")
+
+      var boot = bridgeModule(
+        lib,
+        "./boot-module",
+        editor
+      )
+
+      prepareSite(options.contentTarget.getSite(), options.library)
+
+      editor.asap(
+        boot.withArgs(moduleName, tree.data(), options.contentTarget.selector())
       )
 
       var title = element(
         moduleName,
         element.style({
-          "color": "cyan",
-          "font-weight": "bold",
-          "font-size": "1.2em",
+          "color": "#557",
+          "font-family": "sans-serif",
+          "font-size": "1.4em",
           "line-height": "2em",
           "margin-top": "-2em",
         })
       )
 
-      voxel.left().send(element(".output"))
-
-      voxel.send(element(title, expressionPartial))
-    }
-
-    showSource.fromLibrary = function(bridge, lib, moduleName) {
-      var module = lib.get(moduleName).__nrtvModule
-      return showSource(bridge, module.func.toString(), module.name)
+      options.editorTarget.send([title, editor])
     }
 
 
@@ -65,7 +71,7 @@ module.exports = library.export(
 
     function prepareSite(site, lib) {
       
-      renderExpression.prepareSite(site)
+      if (site.remember("show-source")) { return }
 
       site.addRoute("get", "/show-source/partials/:moduleName", function(request, response) {
 
@@ -100,10 +106,14 @@ module.exports = library.export(
           response.send(source)
         }
       )
+
+      site.see("show-source", true)
     }
 
-    function prepareBridge(bridge) {
+    function prepareBridge(bridge, lib) {
       if (bridge.remember("show-source")) { return }
+
+      prepareSite(bridge.getSite(), lib)
 
       var loadCode = bridge.defineFunction(
         [makeRequest.defineOn(bridge)],
@@ -134,6 +144,7 @@ module.exports = library.export(
     }
 
     showSource.prepareSite = prepareSite
+
 
     return showSource
   }

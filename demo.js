@@ -29,23 +29,62 @@ library.define(
 
 
 library.using(
-  ["web-host", "show-source", library.ref(), "render-pitch"],
-  function collectiveMagic(host, showSource, lib, renderPitch) {
+  ["web-host", "show-source", library.ref(), "render-pitch", "web-element", "basic-styles"],
+  function collectiveMagic(host, showSource, lib, renderPitch, element, basicStyles) {
 
-    host.onVoxel(function(voxel) {
+    host.onRequest(function(getBridge) {
+      var bridge = getBridge()
 
-      var content = voxel.below()
+      basicStyles.addTo(bridge)
 
-      renderPitch(content)
+      var contentPartial = bridge.partial()
+
+      renderPitch(contentPartial)
+
+      var editorPartial = bridge.partial()
 
       showSource({
-        editorTarget: voxel.left({open: true}),
-        contentTarget: content,
+        bridge: editorPartial,
+        contentSelector: contentPartial.selector(),
         library: lib,
         moduleName: "render-pitch",
       })
 
-      voxel.send()
+      var pitch = element(
+        element.style({
+          "transform": "translateX(295px)",
+        }),
+        [
+        element(
+          editorPartial,
+          element.style({
+            "width": "275px",
+            "margin-left": "-295px",
+            "margin-right": "20px",
+            "display": "inline-block",
+            "vertical-align": "top",
+          })
+        ),
+        element(
+          [contentPartial],
+          element.style({
+            "display": "inline-block",
+            "max-width": "400px",
+            "vertical-align": "top",
+            // "transform": "translateX(275px)",
+          })
+        ),
+      ])
+
+      var page = element(
+        element.style({
+          "font-family": "sans-serif",
+        }), [
+          pitch,
+        ]
+      )
+
+      bridge.send(page)
 
     })
   }

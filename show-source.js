@@ -8,7 +8,7 @@ module.exports = library.export(
   function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule, lib) {
 
     function showSource(options) {
-      
+      var bridge = options.bridge
       var moduleName = options.moduleName
       var source = options.library.get(moduleName).__nrtvModule.func.toString()
 
@@ -16,7 +16,7 @@ module.exports = library.export(
 
       var tree = anExpression()
 
-      var editor = options.editorTarget.partial()
+      var editor = bridge.partial()
 
       renderExpression(editor, functionLiteral, tree)
 
@@ -25,27 +25,46 @@ module.exports = library.export(
       var boot = bridgeModule(
         lib,
         "./boot-module",
-        editor
+        bridge
       )
 
-      prepareSite(options.contentTarget.getSite(), options.library)
+      prepareSite(bridge.getSite(), options.library)
 
       editor.asap(
-        boot.withArgs(moduleName, tree.data(), options.contentTarget.selector())
+        boot.withArgs(moduleName, tree.data(), options.contentSelector)
       )
 
-      var title = element(
-        moduleName,
-        element.style({
-          "color": "#557",
+      var title = element(".module-title", moduleName)
+
+      var stylesheet = element.stylesheet([
+
+        element.style(".module-title", {
+          "color": "#a9a9ff",
           "font-family": "sans-serif",
-          "font-size": "1.4em",
-          "line-height": "2em",
-          "margin-top": "-2em",
-        })
-      )
+          "font-size": "1.3em",
+          "font-weight": "bold",
+          "line-height": "1.5em",
+          "margin-bottom": "0.5em",
+          "margin-right": "-40px",
+          "width": "100%",
 
-      options.editorTarget.send([title, editor])
+          // "::after": {
+          //   "content": "\"\"",
+          //   "width": "6pt",
+          //   "height": "6pt",
+          //   "background": "cyan",
+          //   "margin-top": "22pt",
+          //   "float": "right",
+          //   "border-radius": "3pt",
+          // }
+
+        }),
+
+      ])
+
+      bridge.addToHead(stylesheet)
+
+      bridge.send([title, editor])
     }
 
 

@@ -56,7 +56,7 @@ module.exports = library.export(
       window.__nrtvFocusSelector = null
 
       var singleton = eval(js)
-      
+
       var voxel = {
         send: function(content) {
           if (content.html) {

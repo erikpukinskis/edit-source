@@ -9,30 +9,30 @@ module.exports = library.export(
 
     function showSource(options) {
       var bridge = options.bridge
+
       var moduleName = options.moduleName
+
       var source = options.library.get(moduleName).__nrtvModule.func.toString()
 
-      var functionLiteral = javascriptToEzjs(source)
-
-      var tree = anExpression()
+      var tree = javascriptToEzjs(source, options.universe)
 
       var editor = bridge.partial()
 
-      renderExpression(editor, functionLiteral, tree)
+      var boot = bridgeModule(lib, "./boot-module", bridge)
+
+      renderExpression(editor, tree.root(), tree)
+
+      editor.domReady(
+        boot.withArgs(
+          moduleName,
+          tree.id,
+          options.contentSelector
+        )
+      )
 
       bridge.asap("var using = library.using.bind(library)")
 
-      var boot = bridgeModule(
-        lib,
-        "./boot-module",
-        bridge
-      )
-
       prepareSite(bridge.getSite(), options.library)
-
-      editor.asap(
-        boot.withArgs(moduleName, tree.data(), options.contentSelector)
-      )
 
       var title = element(".module-title", moduleName)
 
@@ -44,20 +44,7 @@ module.exports = library.export(
           "font-size": "1.3em",
           "font-weight": "bold",
           "line-height": "1.5em",
-          "margin-bottom": "0.5em",
-          "margin-right": "-40px",
-          "width": "100%",
-
-          // "::after": {
-          //   "content": "\"\"",
-          //   "width": "6pt",
-          //   "height": "6pt",
-          //   "background": "cyan",
-          //   "margin-top": "22pt",
-          //   "float": "right",
-          //   "border-radius": "3pt",
-          // }
-
+          "margin-bottom": "0.2em",
         }),
 
       ])

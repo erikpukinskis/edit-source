@@ -18,7 +18,8 @@
     "an-expression": "*",
     "render-expression": "*",
     "javascript-to-ezjs": "*",
-    "identifiable": "*"
+    "identifiable": "*",
+    "issue-bond": "*"
   },
   "scripts": {
     "start": "node start",

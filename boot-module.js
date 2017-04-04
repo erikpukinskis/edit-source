@@ -2,20 +2,28 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "boot-module",
-  ["an-expression", "function-call"],
-  function(anExpression, functionCall) {
+  ["an-expression", "function-call", "add-html", "tell-the-universe"],
+  function(anExpression, functionCall, addHtml, tellTheUniverse) {
 
-    function bootModule(moduleName, treeData, targetSelector) {
+    function bootModule(moduleName, treeId, targetSelector) {
 
-      var tree = anExpression(treeData)
+      var tree = anExpression.getTree(treeId)
+
+      var universe = tellTheUniverse.called("new-universe").withNames({anExpression: "an-expression"})
+
+      tree.logTo(universe)
+
+      if (!tree) {
+        throw new Error("no tree! "+treeId)
+      }
+
       var module = new Module(tree, moduleName, targetSelector)
 
       return module
     }
 
-    function Module(program, name, targetSelector) {
-      this.program = program
-      this.tree = program
+    function Module(tree, name, targetSelector) {
+      this.tree = tree
       this.name = name
       this.run = run.bind(this)
       this.updateDependencies = updateDependencies.bind(this)
@@ -24,24 +32,24 @@ module.exports = library.export(
       this.loadDependencies = loadDependencies.bind(this)
       this.targetSelector = targetSelector
 
-      var dependencies = program.root().argumentNames
+      var dependencies = tree.root().argumentNames
 
       this.loadDependencies(dependencies, this.run)
 
-      program.onchanged(this.run)
+      tree.onchanged(this.run)
 
       var mod = this
 
-      program.onnewexpression(this.updateAndRun)
+      tree.onnewexpression(this.updateAndRun)
     }
 
     function run() {
-      var targetSelector = window.__nrtvFocusSelector = this.targetSelector
+      addHtml.defaultIn(this.targetSelector)
 
       var out = document.querySelector(this.targetSelector)
 
       if (!out) {
-        throw new Error("Looked for a "+this.targetSelector+" element to render program into, but didn't find one.")
+        throw new Error("Looked for a "+this.targetSelector+" element to render module into, but didn't find one.")
       }
       out.innerHTML = ""
 
@@ -58,15 +66,17 @@ module.exports = library.export(
       var singleton = eval(js)
 
       var voxel = {
-        send: function(content) {
-          if (content.html) {
-            content = content.html()
-          }
-          document.querySelector(targetSelector).innerHTML = content 
-        }
+        send: send.bind(this)
       }
 
       singleton(voxel)
+    }
+
+    function send(content) {
+      if (content.html) {
+        content = content.html()
+      }
+      document.querySelector(this.targetSelector).innerHTML = content 
     }
 
     function updateAndRun(parent, line) {
@@ -133,8 +143,7 @@ module.exports = library.export(
     }
 
     function loadDependencies(deps, callback) {
-      var program = this.program
-      var package = program.root()
+      var package = this.tree.root()
 
       deps.forEach(function(dep) {
         addScriptTag(dep)
@@ -148,8 +157,8 @@ module.exports = library.export(
 
       if (line.kind != "function call") { return }
 
-      var program = this.program
-      var package = program.root()
+      var tree = this.tree
+      var package = tree.root()
       var alreadyIn = package.argumentNames
 
       getDeps(line).forEach(requireIt)
@@ -158,7 +167,7 @@ module.exports = library.export(
         var isMissing = !contains(alreadyIn, dep)
 
         if (isMissing) {
-          program.addFunctionArgument(package.id, dep)
+          tree.addFunctionArgument(package.id, dep)
           addScriptTag(dep)
         }
       }

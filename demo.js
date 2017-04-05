@@ -1,10 +1,22 @@
 var library = require("module-library")(require)
 
 
+
+library.define(
+  "render-bond-purchase-form",
+  ["web-element"],
+  function(element) {
+    return function(bond, bridge) {
+      bridge.send("bond")
+    }
+  }
+)
+
+
 library.define(
   "manifest-floor-panel",
-  ["issue-bond"],
-  function(issueBond) {
+  ["issue-bond", "render-bond-purchase-form"],
+  function(issueBond, purchase) {
 
     var bond = issueBond(
       "floor panel",
@@ -35,72 +47,19 @@ library.define(
 
     // begin
 
-    return bond
-  }
-)
-
-
-library.define(
-  "render-bond-purchase-form",
-  ["web-element"],
-  function(element) {
-    return function(bridge, bond) {
-      bridge.send("bond")
-    }
+    return purchase.bind(null, bond)
   }
 )
 
 
 library.using(
-  ["web-host", "show-source", library.ref(), "manifest-floor-panel", "render-bond-purchase-form", "web-element", "basic-styles", "tell-the-universe"],
-  function collectiveMagic(host, showSource, lib, manifestFloorPanel, renderBondPurchaseForm, element, basicStyles, tellTheUniverse) {
+  ["web-host", "./", library.ref()],
+  function collectiveMagic(host, showSource, lib) {
 
     host.onRequest(function(getBridge) {
       var bridge = getBridge()
 
-      basicStyles.addTo(bridge)
-
-      var contentPartial = bridge.partial()
-
-      renderBondPurchaseForm(contentPartial, manifestFloorPanel)
-
-      var editorPartial = bridge.partial()
-
-      var universe = tellTheUniverse.called("demo-module").withNames({anExpression: "an-expression"})
-
-      showSource({
-        bridge: editorPartial,
-        contentSelector: contentPartial.selector(),
-        library: lib,
-        moduleName: "manifest-floor-panel",
-        universe: universe,
-      })
-
-      var page = element(
-        element.style({
-          "margin-top": "150px",
-        }), [
-        element(
-          editorPartial,
-          element.style({
-            "width": "275px",
-            "margin-right": "20px",
-            "display": "inline-block",
-            "vertical-align": "top",
-          })
-        ),
-        element(
-          [contentPartial],
-          element.style({
-            "display": "inline-block",
-            "width": "300px",
-            "vertical-align": "top",
-          })
-        ),
-      ])
-
-      bridge.send(page)
-
+      showSource(bridge, "manifest-floor-panel", lib)
     })
   }
 )
@@ -109,32 +68,4 @@ library.using(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// EXAMPLE_FUNCTION = function foo() {
-//   bless(this,
-//     "house"
-//   )
-//   upTo(1, house)
-// }
 

@@ -1,20 +1,34 @@
 var library = require("module-library")(require)
 
 
-
 module.exports = library.export(
   "show-source",
-  ["render-expression", "make-request", "web-element", "browser-bridge", "javascript-to-ezjs", "an-expression", "bridge-module", "./boot-module", library.ref()],
-  function(renderExpression, makeRequest, element, BrowserBridge, javascriptToEzjs, anExpression, bridgeModule, bootModule, lib) {
+  ["render-expression", "make-request", "web-element", "browser-bridge", "an-expression", "bridge-module", "./boot-module", "render-bond-purchase-form", "web-element", "basic-styles", "tell-the-universe", "javascript-to-ezjs"],
+  function(renderExpression, makeRequest, element, BrowserBridge, anExpression, bridgeModule, bootModule, renderBondPurchaseForm, element, basicStyles, tellTheUniverse, javascriptToEzjs) {
 
-    function showSource(options) {
-      var bridge = options.bridge
+    function showSource(bridge, moduleName, lib) {
 
-      var moduleName = options.moduleName
+      basicStyles.addTo(bridge)
 
-      var source = options.library.get(moduleName).__nrtvModule.func.toString()
+      var contentPartial = bridge.partial()
 
-      var tree = javascriptToEzjs(source, options.universe)
+      var singleton = lib.get("manifest-floor-panel")
+
+      singleton(contentPartial)
+
+      var universe = tellTheUniverse.called("demo-module").withNames({anExpression: "an-expression"})
+
+      var source = lib.getSource(moduleName)
+
+      var tree = anExpression.tree(moduleName)
+
+      universe("anExpression.tree", moduleName)
+
+      tree.logTo(universe)
+
+      javascriptToEzjs(source, tree)
+
+      var contentSelector = contentPartial.selector()
 
       var editor = bridge.partial()
 
@@ -26,34 +40,60 @@ module.exports = library.export(
         boot.withArgs(
           moduleName,
           tree.id,
-          options.contentSelector
+          contentSelector
         )
       )
 
       bridge.asap("var using = library.using.bind(library)")
 
-      prepareSite(bridge.getSite(), options.library)
+      prepareSite(bridge.getSite(), lib)
 
-      var title = element(".module-title", moduleName)
+      var title = element(".module-title", dedasherize(moduleName))
 
       var stylesheet = element.stylesheet([
 
         element.style(".module-title", {
           "color": "#a9a9ff",
           "font-family": "sans-serif",
-          "font-size": "1.3em",
-          "font-weight": "bold",
-          "line-height": "1.5em",
-          "margin-bottom": "0.2em",
+          "font-size": "1.8em",
+          "margin-bottom": "0.3em",
+          "margin-left": "-0.03em",
         }),
 
       ])
 
       bridge.addToHead(stylesheet)
 
-      bridge.send([title, editor])
+      var page = element(
+        element.style({
+          "margin-top": "150px",
+          "margin-left": "30px",
+        }), [
+        element(
+          [title, editor],
+          element.style({
+            "width": "300px",
+            "margin-right": "20px",
+            "display": "inline-block",
+            "vertical-align": "top",
+          })
+        ),
+        element(
+          [contentPartial],
+          element.style({
+            "display": "inline-block",
+            "width": "300px",
+            "vertical-align": "top",
+          })
+        ),
+      ])
+
+      bridge.send(page)
     }
 
+    function dedasherize(id) {
+      return id.replace(/-/g, " ")
+    }
 
     showSource.button = function(targetVoxel, singleton) {
 

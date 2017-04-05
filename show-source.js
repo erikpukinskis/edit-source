@@ -12,7 +12,7 @@ module.exports = library.export(
 
       var contentPartial = bridge.partial()
 
-      var singleton = lib.get("manifest-floor-panel")
+      var singleton = lib.get(moduleName)
 
       singleton(contentPartial)
 
@@ -48,11 +48,12 @@ module.exports = library.export(
 
       prepareSite(bridge.getSite(), lib)
 
-      var title = element(".module-title", dedasherize(moduleName))
+      var title = element("h2", element.style({"text-transform": "capitalize"}), dedasherize(moduleName))
 
       var stylesheet = element.stylesheet([
 
-        element.style(".module-title", {
+        element.style("h2", {
+          "font-weight": "normal",
           "color": "#a9a9ff",
           "font-family": "sans-serif",
           "font-size": "1.8em",

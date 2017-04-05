@@ -7,7 +7,12 @@ library.define(
   ["web-element"],
   function(element) {
     return function(bond, bridge) {
-      bridge.send("bond")
+      bridge.send([
+        element("h2", "Buy "+bond.id+ " bond"),
+        element("p", bond.rateOfReturn),
+        element("p", bond.rateOfReturn+" "+bond.termLength),
+        element(".button", "Buy")
+      ])
     }
   }
 )

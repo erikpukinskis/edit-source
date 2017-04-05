@@ -3,8 +3,8 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "show-source",
-  ["render-expression", "make-request", "web-element", "browser-bridge", "an-expression", "bridge-module", "./boot-module", "render-bond-purchase-form", "web-element", "basic-styles", "tell-the-universe", "javascript-to-ezjs"],
-  function(renderExpression, makeRequest, element, BrowserBridge, anExpression, bridgeModule, bootModule, renderBondPurchaseForm, element, basicStyles, tellTheUniverse, javascriptToEzjs) {
+  ["render-expression", "make-request", "web-element", "browser-bridge", "an-expression", "bridge-module", "./boot-module", "web-element", "basic-styles", "tell-the-universe", "javascript-to-ezjs"],
+  function(renderExpression, makeRequest, element, BrowserBridge, anExpression, bridgeModule, bootModule, element, basicStyles, tellTheUniverse, javascriptToEzjs) {
 
     function showSource(bridge, moduleName, lib) {
 

@@ -40,53 +40,74 @@ module.exports = library.export(
         boot.withArgs(
           moduleName,
           tree.id,
-          contentSelector
+          contentSelector,
+          bridge.asBinding(),
+          renderExpression.defineOn(bridge)
         )
       )
+
 
       bridge.asap("var using = library.using.bind(library)")
 
       prepareSite(bridge.getSite(), lib)
 
-      var title = element("h2", element.style({"text-transform": "capitalize"}), dedasherize(moduleName))
+      var title = element("h2", element.style({
+        "text-transform": "capitalize",
+        "color": "#a9a9ff",
+        "margin-left": "-0.03em",
+      }), dedasherize(moduleName))
 
       var stylesheet = element.stylesheet([
 
         element.style("h2", {
           "font-weight": "normal",
-          "color": "#a9a9ff",
           "font-family": "sans-serif",
           "font-size": "1.8em",
-          "margin-bottom": "0.3em",
-          "margin-left": "-0.03em",
+          "margin": "0.5em 0",
         }),
 
+        element.style(".log", {
+          "background-color": "#ffffee"
+        }),
+
+        element.style(".log h2", {
+          "color": "#fc0",
+        }),
+
+        element.style(".universe-title", {
+          "font-weight": "bold",
+        }),
+
+        element.style(".column", {
+          "display": "inline-block",
+          "width": "250px",
+          "vertical-align": "top",
+          "margin-right": "20px",
+
+          ".squished": {
+            "width": "0px",
+          },
+        }),
+
+        element.style(".page", {
+          "margin-top": "150px",
+          "margin-left": "30px",
+        }),
       ])
 
       bridge.addToHead(stylesheet)
 
-      var page = element(
-        element.style({
-          "margin-top": "150px",
-          "margin-left": "30px",
-        }), [
+
+      var page = element(".page", [
         element(
-          [title, editor],
-          element.style({
-            "width": "300px",
-            "margin-right": "20px",
-            "display": "inline-block",
-            "vertical-align": "top",
-          })
+          ".column",
+          [contentPartial]
         ),
         element(
-          [contentPartial],
-          element.style({
-            "display": "inline-block",
-            "width": "300px",
-            "vertical-align": "top",
-          })
+          ".editor.column",
+          [title, editor]
         ),
+        element(".log.column.squished"),
       ])
 
       bridge.send(page)

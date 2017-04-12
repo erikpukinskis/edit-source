@@ -2,10 +2,10 @@ var library = require("module-library")(require)
 
 module.exports = library.export(
   "boot-module",
-  ["an-expression", "function-call", "add-html", "tell-the-universe"],
-  function(anExpression, functionCall, addHtml, tellTheUniverse) {
+  ["an-expression", "function-call", "add-html", "tell-the-universe", "web-element", "javascript-to-ezjs"],
+  function(anExpression, functionCall, addHtml, tellTheUniverse, element, javascriptToEzjs) {
 
-    function bootModule(moduleName, treeId, targetSelector) {
+    function bootModule(moduleName, treeId, targetSelector, bridge, renderExpression) {
 
       var tree = anExpression.getTree(treeId)
 
@@ -13,9 +13,28 @@ module.exports = library.export(
 
       tree.logTo(universe)
 
-      if (!tree) {
-        throw new Error("no tree! "+treeId)
-      }
+      universe.onStatement(function(call) {
+
+        var logTree = anExpression.tree()
+
+        javascriptToEzjs(universe.source(), logTree)
+
+        var logEl = renderExpression(bridge, logTree.root(), logTree)
+
+
+        var uni = element([
+          element("h2", "A wild universe appeared!"),
+          element("p", "It only exists for you, for now."),
+          element("p", element(".button", "Make it forever")),
+          logEl,
+        ])
+
+        addHtml.inside(".log", uni.html())
+
+        setTimeout(function() {
+          document.querySelector(".log").classList.remove("squished")
+        })
+      })
 
       var module = new Module(tree, moduleName, targetSelector)
 
@@ -43,8 +62,7 @@ module.exports = library.export(
       tree.onnewexpression(this.updateAndRun)
     }
 
-    function run() {
-      addHtml.defaultIn(this.targetSelector)
+    function run() {      
 
       var out = document.querySelector(this.targetSelector)
 
@@ -69,7 +87,10 @@ module.exports = library.export(
         send: send.bind(this)
       }
 
-      singleton(voxel)
+      addHtml.defaultIn(this.targetSelector, function() {
+        singleton(voxel)
+      })
+
     }
 
     function send(content) {

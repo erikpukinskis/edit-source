@@ -3,25 +3,9 @@ var library = require("module-library")(require)
 
 
 library.define(
-  "render-bond-purchase-form",
-  ["web-element"],
-  function(element) {
-    return function(bond, bridge) {
-      bridge.send([
-        element("h2", "Buy "+bond.id+ " bond"),
-        element("p", bond.rateOfReturn),
-        element("p", bond.rateOfReturn+" "+bond.termLength),
-        element(".button", "Buy")
-      ])
-    }
-  }
-)
-
-
-library.define(
   "manifest-floor-panel",
-  ["issue-bond", "render-bond-purchase-form"],
-  function(issueBond, purchase) {
+  ["issue-bond", "sell-bond"],
+  function(issueBond, sellBond) {
 
     var bond = issueBond(
       "floor panel",
@@ -50,9 +34,7 @@ library.define(
       "$10"
     )
 
-    // begin
-
-    return purchase.bind(null, bond)
+    return sellBond(bond)
   }
 )
 

@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "run-test": "*",
-    "check-book": "*"
+    "check-book": "*",
+    "sell-bond": "*"
   },
   "repository": {
     "type": "git",
